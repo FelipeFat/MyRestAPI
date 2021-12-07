@@ -19,7 +19,7 @@ namespace MyRest.Business.Services
         {
             if (!ExecuteValidation(new ProductValidation(), product)) return;
 
-            //var user = _user.GetUserId();
+            product.Supplier = null;
 
             await _productRepository.Add(product);
         }

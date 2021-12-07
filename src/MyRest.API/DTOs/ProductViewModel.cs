@@ -24,7 +24,7 @@ namespace MyRestAPI.DTOs
         public string Image { get; set; }
 
         [Required(ErrorMessage = "The field {0} is required")]
-        public decimal Value { get; set; }
+        public decimal ProductValue { get; set; }
 
         [ScaffoldColumn(false)]
         public DateTime InsertDate { get; set; }

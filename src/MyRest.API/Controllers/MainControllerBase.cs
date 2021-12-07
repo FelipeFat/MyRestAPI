@@ -51,11 +51,11 @@ namespace MyRestAPI.Controllers
             foreach (var error in errors)
             {
                 var errorMsg = error.Exception == null ? error.ErrorMessage : error.Exception.Message;
-                NofityError(errorMsg);
+                NotifyError(errorMsg);
             }
         }
 
-        protected void NofityError(string message)
+        protected void NotifyError(string message)
         {
             _notifier.Handle(new Notification(message));
         }

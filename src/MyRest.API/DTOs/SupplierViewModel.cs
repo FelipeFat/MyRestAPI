@@ -21,6 +21,6 @@ namespace MyRestAPI.DTOs
 
         public bool Ativo { get; set; }
 
-        public IEnumerable<ProductViewModel> Product { get; set; }
+        public IEnumerable<ProductViewModel> Products { get; set; }
     }
 }
