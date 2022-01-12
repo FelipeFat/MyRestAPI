@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MyRest.Business.Intefaces;
 using MyRest.Business.Models;
@@ -6,6 +7,7 @@ using MyRestAPI.DTOs;
 
 namespace MyRestAPI.Controllers
 {
+    [Authorize]
     [Route("supplieres")]
     public class SuppliersController : MainController
     {
