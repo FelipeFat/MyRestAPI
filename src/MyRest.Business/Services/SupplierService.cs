@@ -11,13 +11,16 @@ namespace MyRest.Business.Services
     {
         private readonly ISupplierRepository _supplierRepository;
         private readonly IAddressRepository _addressRepository;
+        private readonly IUser _user;
 
-        public SupplierService(ISupplierRepository supplierRepository, 
+        public SupplierService(ISupplierRepository supplierRepository,
                                  IAddressRepository addressRepository,
-                                 INotifier notificador) : base(notificador)
+                                 INotifier notificador, 
+                                 IUser user) : base(notificador)
         {
             _supplierRepository = supplierRepository;
             _addressRepository = addressRepository;
+            _user = user;
         }
 
         public async Task<bool> Add(Supplier supplier)
@@ -30,6 +33,9 @@ namespace MyRest.Business.Services
                 Notify("There is already a supplier with the same document.");
                 return false;
             }
+
+            // Example to get user information
+            var userEmail = _user.GetUserEmail();
 
             await _supplierRepository.Add(supplier);
             return true;

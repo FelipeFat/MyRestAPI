@@ -1,4 +1,5 @@
-﻿using MyRest.Business.Intefaces;
+﻿using DevIO.Api.Extensions;
+using MyRest.Business.Intefaces;
 using MyRest.Business.Notificacoes;
 using MyRest.Business.Services;
 using MyRest.Data.Context;
@@ -19,6 +20,9 @@ namespace MyRestAPI.Configuration
 
             services.AddScoped<ISupplierService, SupplierService>();
             services.AddScoped<IProductService, ProductService>();
+
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+            services.AddScoped<IUser, AspNetUser>();
 
             return services;
         }
