@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using MyRest.Business.Intefaces;
 using MyRest.Business.Models;
 using MyRestAPI.DTOs;
+using MyRestAPI.Extensions;
 
 namespace MyRestAPI.Controllers
 {
@@ -25,6 +26,7 @@ namespace MyRestAPI.Controllers
             _mapper = mapper;
         }
 
+        [ClaimsAuthorize("Supplier", "Get")]
         [HttpGet("GetAll")]
         public async Task<IEnumerable<SupplierViewModel>> GetAll()
         {
