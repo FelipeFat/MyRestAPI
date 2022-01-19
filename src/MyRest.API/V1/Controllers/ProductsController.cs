@@ -2,11 +2,13 @@
 using Microsoft.AspNetCore.Mvc;
 using MyRest.Business.Intefaces;
 using MyRest.Business.Models;
+using MyRestAPI.Controllers;
 using MyRestAPI.DTOs;
 
-namespace MyRestAPI.Controllers
+namespace MyRestAPI.V1.Controllers
 {
-    [Route("api/produtos")]
+    [ApiVersion("1.0")]
+    [Route("v{version:apiVersion}/products")]
     public class ProductsController : MainController
     {
         private readonly IProductRepository _productRepository;
@@ -31,7 +33,7 @@ namespace MyRestAPI.Controllers
         {
             var productViewModel = _mapper.Map<ProductViewModel>(await _productRepository.GetById(id));
 
-            if(productViewModel == null) return NotFound();
+            if (productViewModel == null) return NotFound();
 
             return productViewModel;
         }
@@ -57,7 +59,7 @@ namespace MyRestAPI.Controllers
 
             var imageName = Guid.NewGuid() + "_" + productViewModel.Image;
 
-            if(!FileUpload(productViewModel.ImageUpload, imageName))
+            if (!FileUpload(productViewModel.ImageUpload, imageName))
             {
                 return CustomResponse(productViewModel);
             }

@@ -3,13 +3,15 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MyRest.Business.Intefaces;
 using MyRest.Business.Models;
+using MyRestAPI.Controllers;
 using MyRestAPI.DTOs;
 using MyRestAPI.Extensions;
 
-namespace MyRestAPI.Controllers
+namespace MyRestAPI.V1.Controllers
 {
     [Authorize]
-    [Route("supplieres")]
+    [ApiVersion("1.0")]
+    [Route("v{version:apiVersion}/supplieres")]
     public class SuppliersController : MainController
     {
         private readonly ISupplierRepository _supplierRepository;
@@ -40,7 +42,7 @@ namespace MyRestAPI.Controllers
         {
             var supplier = _mapper.Map<SupplierViewModel>(await _supplierRepository.GetSupplierProductsAddress(id));
 
-            if(supplier == null) return NotFound();
+            if (supplier == null) return NotFound();
 
             return supplier;
         }
@@ -48,7 +50,7 @@ namespace MyRestAPI.Controllers
         [HttpPost]
         public async Task<ActionResult<SupplierViewModel>> Create(SupplierViewModel supplierViewModel)
         {
-            if(!ModelState.IsValid) return CustomResponse(ModelState);
+            if (!ModelState.IsValid) return CustomResponse(ModelState);
 
             var supplier = _mapper.Map<Supplier>(supplierViewModel);
             await _supplierService.Add(supplier);
@@ -59,7 +61,7 @@ namespace MyRestAPI.Controllers
         [HttpPut("{id:guid}")]
         public async Task<ActionResult<SupplierViewModel>> Update(Guid id, SupplierViewModel supplierViewModel)
         {
-            if(id != supplierViewModel.Id) return BadRequest();
+            if (id != supplierViewModel.Id) return BadRequest();
 
             if (!ModelState.IsValid) return CustomResponse(ModelState);
 

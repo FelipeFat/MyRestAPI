@@ -3,14 +3,17 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using MyRest.Business.Intefaces;
+using MyRestAPI.Controllers;
 using MyRestAPI.DTOs;
 using MyRestAPI.Extensions;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 
-namespace MyRestAPI.Controllers
+namespace MyRestAPI.V1.Controllers
 {
+    [ApiVersion("1.0")]
+    [Route("v{version:apiVersion}/")]
     public class AuthController : MainController
     {
         private readonly SignInManager<IdentityUser> _signInManager;
@@ -25,20 +28,20 @@ namespace MyRestAPI.Controllers
         }
 
         [HttpPost("Register")]
-        public async Task<ActionResult> Register (RegisterUserViewModel registerUserViewModel)
+        public async Task<ActionResult> Register(RegisterUserViewModel registerUserViewModel)
         {
-            if(!ModelState.IsValid) return CustomResponse(ModelState);
+            if (!ModelState.IsValid) return CustomResponse(ModelState);
 
             var user = new IdentityUser { UserName = registerUserViewModel.Email, Email = registerUserViewModel.Email, EmailConfirmed = true };
 
             var result = await _userManager.CreateAsync(user, registerUserViewModel.Password);
 
-            if(result.Succeeded)
+            if (result.Succeeded)
             {
                 await _signInManager.SignInAsync(user, isPersistent: false);
                 return CustomResponse(await GenerateJwt(user.Email));
             }
-            foreach(var error in result.Errors)
+            foreach (var error in result.Errors)
             {
                 NotifyError(error.Description);
             }
@@ -53,11 +56,11 @@ namespace MyRestAPI.Controllers
 
             var result = await _signInManager.PasswordSignInAsync(loginUserViewModel.Email, loginUserViewModel.Password, false, true);
 
-            if(result.Succeeded)
+            if (result.Succeeded)
             {
                 return CustomResponse(await GenerateJwt(loginUserViewModel.Email));
             }
-            if(result.IsLockedOut)
+            if (result.IsLockedOut)
             {
                 NotifyError("User blocked for invalid login attempts");
                 return CustomResponse(loginUserViewModel);
@@ -99,7 +102,7 @@ namespace MyRestAPI.Controllers
                 Subject = identityClaims
             });
 
-            var encodedToken = tokenHandler.WriteToken(token); 
+            var encodedToken = tokenHandler.WriteToken(token);
 
             var response = new LoginResponseViewModel
             {
