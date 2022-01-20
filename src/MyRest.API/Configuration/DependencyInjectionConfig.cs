@@ -1,9 +1,11 @@
 ﻿using DevIO.Api.Extensions;
+using Microsoft.Extensions.Options;
 using MyRest.Business.Intefaces;
 using MyRest.Business.Notificacoes;
 using MyRest.Business.Services;
 using MyRest.Data.Context;
 using MyRest.Data.Repository;
+using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace MyRestAPI.Configuration
 {
@@ -23,6 +25,8 @@ namespace MyRestAPI.Configuration
 
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddScoped<IUser, AspNetUser>();
+
+            services.AddTransient<IConfigureOptions<SwaggerGenOptions>, ConfigureSwaggerOptions>();
 
             return services;
         }
