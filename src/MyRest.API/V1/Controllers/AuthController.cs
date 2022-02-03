@@ -19,12 +19,18 @@ namespace MyRestAPI.V1.Controllers
         private readonly SignInManager<IdentityUser> _signInManager;
         private readonly UserManager<IdentityUser> _userManager;
         private readonly AppSettings _appSettings;
+        private readonly ILogger<AuthController> _logger;
 
-        public AuthController(INotifier notifier, SignInManager<IdentityUser> signInManager, UserManager<IdentityUser> userManager, IOptions<AppSettings> appSettings) : base(notifier)
+        public AuthController(INotifier notifier,
+                               SignInManager<IdentityUser> signInManager,
+                               UserManager<IdentityUser> userManager,
+                               IOptions<AppSettings> appSettings,
+                               ILogger<AuthController> logger) : base(notifier)
         {
             _signInManager = signInManager;
             _userManager = userManager;
             _appSettings = appSettings.Value;
+            _logger = logger;
         }
 
         [HttpPost("Register")]
@@ -58,6 +64,7 @@ namespace MyRestAPI.V1.Controllers
 
             if (result.Succeeded)
             {
+                _logger.LogInformation("Successful Login!");
                 return CustomResponse(await GenerateJwt(loginUserViewModel.Email));
             }
             if (result.IsLockedOut)

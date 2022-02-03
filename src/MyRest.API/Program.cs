@@ -1,3 +1,5 @@
+using HealthChecks.UI.Client;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.EntityFrameworkCore;
@@ -40,6 +42,12 @@ builder.Services.Configure<ApiBehaviorOptions>(options =>
     options.SuppressModelStateInvalidFilter = true; 
 });
 builder.Services.AddAutoMapper(typeof(Program));
+
+builder.Services.AddHealthChecks()
+    .AddSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"), name: "SQLDatabase");
+
+builder.Services.AddHealthChecksUI().AddInMemoryStorage();
+
 builder.Services.ResolveDependencies();
 // Fix "A possible object cycle was detected which is not supported"
 builder.Services.AddControllersWithViews()
@@ -57,6 +65,19 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+
+app.UseHealthChecks("/hc", new HealthCheckOptions()
+{
+    Predicate = _ => true,
+    ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+});
+
+app.UseHealthChecksUI(options => 
+{ 
+    options.UIPath = "/hc-ui";
+    options.ApiPath = "/hc-ui-api";
+});
+
 
 app.UseSwaggerConfig(apiVersionDescriptionProvider);
 
